@@ -1,0 +1,48 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Menu</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Home -->
+  <div id="home">
+    <img src="icon.png" alt="Restaurant Icon" class="icon" />
+  
+    <h1>Welcome to Foodie's Paradise 🍴</h1>
+    <button onclick="showMenu()">Order Now</button>
+  </div>
+
+  <!-- Food Types -->
+  <div id="menu" class="hidden">
+    <h2>Select Food Type</h2>
+    <div id="food-types"></div>
+  </div>
+
+  <!-- Items -->
+  <div id="subitems" class="hidden">
+    <h2>Select Items</h2>
+    <div id="items-list"></div>
+    <button onclick="completeOrder()">Completed Order</button>
+  </div>
+
+  <!-- Checkout -->
+  <div id="checkout" class="hidden">
+    <h2>Order Summary</h2>
+    <div id="order-list"></div>
+    <p id="total"></p>
+    <input type="number" id="table-number" placeholder="Enter Table Number" />
+    <button onclick="makePayment()">Pay Now</button>
+  </div>
+
+  <!-- Success -->
+  <div id="success" class="hidden">
+    <h2>✅ Order Successful!</h2>
+    <p>Thank you for your order. Your food will be served shortly!</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
