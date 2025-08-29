@@ -1,0 +1,285 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Menu</title>
+  
+  <style>
+
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  background: linear-gradient(to right, #fff3e0, #ffe0f0);
+  margin: 0;
+  padding: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+h1, h2 {
+  color: #d84315;
+}
+
+.icon {
+  width: 200px;
+  margin-top: 200px;
+}
+
+.main-img {
+  width: 350px;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+button {
+  padding: 12px 24px;
+  margin: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #ff7043;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: #e64a19;
+}
+
+#food-types, #items-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.food-card, .item-card {
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 15px;
+  width: 180px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+.food-card:hover, .item-card:hover {
+  transform: scale(1.05);
+  background: #fff8e1;
+}
+.food-card img, .item-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+#order-list {
+  text-align: left;
+  margin: 20px auto;
+  max-width: 400px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 8px;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Home -->
+  <div id="home">
+    <img src="C:\Users\91918\Downloads\icon.png" alt="Restaurant Icon" class="icon" />
+  
+    <h1>Welcome to Foodie's Paradise 🍴</h1>
+    <button onclick="showMenu()">Order Now</button>
+  </div>
+
+  <!-- Food Types -->
+  <div id="menu" class="hidden">
+    <h2>Select Food Type</h2>
+    <div id="food-types"></div>
+  </div>
+
+  <!-- Items -->
+  <div id="subitems" class="hidden">
+    <h2>Select Items</h2>
+    <div id="items-list"></div>
+    <button onclick="completeOrder()">Completed Order</button>
+  </div>
+
+  <!-- Checkout -->
+  <div id="checkout" class="hidden">
+    <h2>Order Summary</h2>
+    <div id="order-list"></div>
+    <p id="total"></p>
+    <input type="number" id="table-number" placeholder="Enter Table Number" />
+    <button onclick="makePayment()">Pay Now</button>
+  </div>
+
+  <!-- Success -->
+  <div id="success" class="hidden">
+    <h2>✅ Order Successful!</h2>
+    <p>Thank you for your order. Your food will be served shortly!</p>
+  </div>
+
+  <script >
+const foodData = { 
+  "Pizza": {
+    price: 200,
+    items: ["Margherita", "Pepperoni", "Veggie"],
+    img : "https://th.bing.com/th/id/OIP.f4KsUS1N-qtIPyB6NS3L5QHaEo?w=294&h=183&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Burger": {
+    price: 150,
+    items: ["Cheese Burger", "Veg Burger", "Chicken Burger"],
+    img: "https://th.bing.com/th/id/OIP.2dhr5Ln6cMHIu9SmwE_uBgHaE7?w=274&h=183&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Drinks": {
+    price: 100,
+    items: ["Coke", "Pepsi", "Lemonade"],
+    img: "https://th.bing.com/th/id/OIP.aEppTxdc7DsE1vTmJHGN3wHaFc?w=240&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+
+  },
+  "Desserts": {
+    price: 180,
+    items: [
+      "Chocolate lava cake",
+      "Cheesecake (New York, blueberry, mango)",
+      "Ice cream sundaes",
+      "Gulab jamun",
+      "Rasmalai",
+      "Tiramisu",
+      "Crème brûlée",
+      "Brownies",
+      "Pastries",
+      "Mousse"
+    ],
+    img: "https://th.bing.com/th/id/OIP.jtEtpa6l0i_OM1XBZShOCQHaEo?w=292&h=182&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Salads": {
+    price: 120,
+    items: ["Caesar salad", "Greek salad", "Garden fresh salad", "Pasta salad", "Fruit salad", "Chickpea salad", "Quinoa salad"],
+    img: "https://th.bing.com/th/id/OIP.5mH3m6atVE5M3xFEbDtQFwHaHa?w=182&h=182&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Beverages": {
+    price: 90,
+    items: ["Soft drinks", "Fresh juices", "Milkshakes", "Mocktails", "Tea & coffee", "Lassi", "Buttermilk"],
+    img: "https://th.bing.com/th/id/OIP.bvqeN-L3LUD_9OfeFuFdcAHaE8?w=248&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Sides": {
+    price: 100,
+    items: ["French fries", "Garlic bread", "Mashed potatoes", "Coleslaw", "Onion rings", "Sautéed vegetables"],
+    img: "https://th.bing.com/th/id/OIP.uNNxfA5QOuACHLeQ0rR8igHaE8?w=250&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Seafood": {
+    price: 250,
+    items: ["Grilled fish", "Prawn curry", "Crab masala", "Fish fingers", "Lobster thermidor", "Shrimp biryani"],
+    img: "https://th.bing.com/th/id/OIP.vvOwomtKpjZBf9MnlBjK0AHaFe?w=252&h=186&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Rice Dishes": {
+    price: 150,
+    items: ["Jeera rice", "Fried rice (veg/chicken/egg)", "Pulao", "Lemon rice", "Tamarind rice", "Coconut rice"],
+    img: "https://th.bing.com/th/id/OIP.zMsXqhVdDpLo7Jnoub7M1AHaE8?w=268&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Biryanis": {
+    price: 220,
+    items: ["Chicken biryani", "Mutton biryani", "Veg biryani", "Fish biryani", "Egg biryani", "Hyderabadi dum biryani"],
+    img: "https://th.bing.com/th/id/OIP.fDWEOEHk6trKCevpKK8-LgHaEO?w=291&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Meat Dishes": {
+    price: 300,
+    items: ["Butter chicken", "Mutton rogan josh", "Chicken tikka masala", "Lamb chops", "Grilled chicken steak", "Beef curry"],
+    img: "https://th.bing.com/th/id/OIP.fE2aHgb4ooKToEgeL0KufQHaFP?w=270&h=190&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  },
+  "Vegetarian Dishes": {
+    price: 180,
+    items: ["Paneer butter masala", "Veg kofta curry", "Dal makhani", "Chole bhature", "Stuffed capsicum", "Veg thali"],
+    img: "https://th.bing.com/th/id/OIP.J7cB6eQPppoy1dUUITDzQgHaLH?w=208&h=305&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+  }
+};
+
+let selectedItems = [];
+let totalAmount = 0;
+
+function showMenu() {
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("menu").classList.remove("hidden");
+
+  const foodTypesDiv = document.getElementById("food-types");
+  foodTypesDiv.innerHTML = "";
+
+  for (let type in foodData) {
+    const card = document.createElement("div");
+    card.className = "food-card";
+    card.innerHTML = `
+      <img src="${foodData[type].img}" alt="${type}">
+      <strong>${type}</strong><br>Starting ₹${foodData[type].price}
+    `;
+    card.onclick = () => showSubItems(type);
+    foodTypesDiv.appendChild(card);
+  }
+}
+
+function showSubItems(type) {
+  document.getElementById("menu").classList.add("hidden");
+  document.getElementById("subitems").classList.remove("hidden");
+
+  const itemsList = document.getElementById("items-list");
+  itemsList.innerHTML = "";
+
+  foodData[type].items.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "item-card";
+    card.innerHTML = `
+      <img src="https://source.unsplash.com/400x300/?${item}" alt="${item}">
+      ${item} - ₹${foodData[type].price}
+    `;
+    card.onclick = () => {
+      let quantity = prompt(`Enter quantity for ${item}:`, 1);
+      quantity = parseInt(quantity);
+
+      if (quantity > 0) {
+        selectedItems.push({ name: item, price: foodData[type].price, qty: quantity });
+        card.style.backgroundColor = "#d4edda";
+      } else {
+        alert("Invalid quantity. Please try again.");
+      }
+    };
+    itemsList.appendChild(card);
+  });
+}
+
+function completeOrder() {
+  document.getElementById("subitems").classList.add("hidden");
+  document.getElementById("checkout").classList.remove("hidden");
+
+  const orderList = document.getElementById("order-list");
+  orderList.innerHTML = selectedItems.map(i => 
+    `<p>✔ ${i.name} (x${i.qty}) - ₹${i.price} each = ₹${i.price * i.qty}</p>`
+  ).join("");
+
+  totalAmount = selectedItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  document.getElementById("total").innerText = `Total Amount: ₹${totalAmount}`;
+}
+
+function makePayment() {
+  const tableNumber = document.getElementById("table-number").value;
+  if (!tableNumber) {
+    alert("Please enter your table number.");
+    return;
+  }
+
+  document.getElementById("checkout").classList.add("hidden");
+  document.getElementById("success").classList.remove("hidden");
+}
+
+  </script>
+</body>
+</html>
